@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Base - Slate 950 */
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+
+    /* Card - Slate 900 */
+    --card: 220 35% 15%;
+    --card-foreground: 210 40% 98%;
+
+    /* Popover */
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Primary - Intense Blue */
+    --primary: 217 91% 60%;
+    --primary-foreground: 210 40% 98%;
+
+    /* Secondary - Slate 800 */
+    --secondary: 215 28% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    /* Muted */
+    --muted: 215 28% 17%;
+    --muted-foreground: 217 19% 65%;
+
+    /* Accent */
+    --accent: 215 28% 17%;
+    --accent-foreground: 210 40% 98%;
+
+    /* Destructive */
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    /* Border */
+    --border: 215 28% 17%;
+    --input: 215 28% 17%;
+    --ring: 217 91% 60%;
+
+    --radius: 0.75rem;
+  }
+}
+
+body {
+  @apply bg-background text-foreground antialiased;
+  font-family: 'Inter', sans-serif;
+  background-image:
+    radial-gradient(circle at 50% 0%, hsla(217, 91%, 60%, 0.15), transparent 40%),
+    radial-gradient(circle at 0% 100%, hsla(220, 50%, 20%, 0.3), transparent 30%);
+  background-attachment: fixed;
+}
+
+/* Glass effect utilities */
+.glass {
+  @apply bg-background/80 backdrop-blur-md border border-white/5;
+}
+
+.glass-panel {
+  @apply bg-card/50 backdrop-blur-xl border border-white/10 shadow-xl;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-slate-700/50 rounded-full;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-600;
+}
