@@ -1,0 +1,66 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.venv/
+venv/
+ENV/
+
+# --- Node.js ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+dist-ssr
+*.local
+.parcel-cache
+.cache
+.next
+out
+build/
+
+# --- IDEs & OS ---
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo
+Thumbs.db
+
+# --- LipiStudio Specific ---
+# Ignore all uploads (original and burned videos)
+src/backend/uploads/
+# Keep the directory structure but ignore files inside
+!src/backend/uploads/.gitkeep
+
+# Ignore logs
+src/backend/logs/*.log
+!src/backend/logs/.gitkeep
+
+# SRT files (temp generated during burning)
+src/backend/*.srt
+src/backend/**/*.srt
+
+# Environment files
+.env
+.env.local
+.env.*.local
