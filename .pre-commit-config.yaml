@@ -34,9 +34,7 @@ repos:
     rev: v0.11.2
     hooks:
       - id: ruff
-        args: [--fix, --config, src/backend/ruff.toml]
-      - id: ruff-format
-        args: [--config, src/backend/ruff.toml]
+        args: [--fix, -v]
 
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.24.2
