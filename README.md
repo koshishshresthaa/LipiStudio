@@ -48,3 +48,4 @@ npm run dev
 ├── uploads/            # (Ignored) Storage for video assets
 └── pyproject.toml      # Project dependencies and metadata
 ```
+<img width="1920" height="963" alt="image" src="https://github.com/user-attachments/assets/ae63b59d-e7ce-4618-adaa-e30dfc0813f8" />
