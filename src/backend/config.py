@@ -20,10 +20,10 @@ class Settings(BaseModel):
     WHISPER_MODEL: str = "turbo"
 
     # Subtitle Styling (Reel Style)
-    SUBTITLE_FONT_SIZE: int = 12
+    SUBTITLE_FONT_SIZE: int = 10
     SUBTITLE_MARGIN_V: int = 60
-    SUBTITLE_BOLD: int = 1
-    SUBTITLE_OUTLINE: int = 2
+    SUBTITLE_BOLD: int = 0.8
+    SUBTITLE_OUTLINE: int = 0.5
     SUBTITLE_SHADOW: float = 0.5
     SUBTITLE_COLOR: str = "&H00FFFFFF"  # White
     SUBTITLE_OUTLINE_COLOR: str = "&H00000000"  # Black
