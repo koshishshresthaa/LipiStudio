@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any
 
 from pydantic import BaseModel
 
@@ -19,14 +20,37 @@ class Settings(BaseModel):
     # Model Configuration
     WHISPER_MODEL: str = "turbo"
 
-    # Subtitle Styling (Reel Style)
-    SUBTITLE_FONT_SIZE: int = 10
-    SUBTITLE_MARGIN_V: int = 60
-    SUBTITLE_BOLD: int = 0.8
-    SUBTITLE_OUTLINE: int = 0.5
-    SUBTITLE_SHADOW: float = 0.5
-    SUBTITLE_COLOR: str = "&H00FFFFFF"  # White
-    SUBTITLE_OUTLINE_COLOR: str = "&H00000000"  # Black
+    # Caption Templates
+    CAPTION_TEMPLATES: dict[str, dict[str, Any]] = {
+        "modern_reel": {
+            "font_size": 10,
+            "margin_v": 60,
+            "bold": 1,
+            "outline": 2,
+            "shadow": 0.5,
+            "primary_color": "&H00FFFFFF",
+            "outline_color": "&H00000000",
+        },
+        "highlight": {
+            "font_size": 14,
+            "margin_v": 80,
+            "bold": 1,
+            "outline": 3,
+            "shadow": 1.5,
+            "primary_color": "&H0000FFFF",  # Yellow
+            "outline_color": "&H00000000",
+        },
+        "minimalist": {
+            "font_size": 8,
+            "margin_v": 40,
+            "bold": 0,
+            "outline": 1,
+            "shadow": 0,
+            "primary_color": "&H00EEEEEE",  # Off-white/Light grey
+            "outline_color": "&H00000000",
+        },
+    }
+    DEFAULT_TEMPLATE: str = "modern_reel"
     SUBTITLE_WRAP_STYLE: int = 2  # No wrap
 
     # Processing Constraints
