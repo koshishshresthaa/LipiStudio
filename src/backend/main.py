@@ -1,3 +1,4 @@
+import mimetypes
 import os
 import shutil
 from pathlib import Path
@@ -12,6 +13,9 @@ from services.audio import extract_audio, AudioExtractionError
 from services.subtitle import burn_subtitles, SubtitleError
 from services.transcription import transcribe_audio, TranscriptionError
 from utils.logger import get_logger
+
+# Ensure MP4 MIME type is registered
+mimetypes.add_type('video/mp4', '.mp4')
 
 # Initialize Logger
 logger = get_logger("main")
@@ -47,6 +51,7 @@ class TranscriptionResponse(BaseModel):
 class BurnRequest(BaseModel):
     video_path: str
     segments: list[Segment]
+    template_id: str | None = Field(default=None, description="Caption styling template ID")
 
 class BurnResponse(BaseModel):
     output_path: str
@@ -61,18 +66,27 @@ async def root() -> dict[str, str]:
     return {"status": "ok", "project": settings.PROJECT_NAME, "version": settings.VERSION}
 
 @app.post("/upload")
-async def upload_video(file: UploadFile = File(...)) -> dict[str, str]:
+async def upload_video(req: Request, file: UploadFile = File(...)) -> dict[str, str]:
     """
     Uploads a video file to the server.
     """
     logger.info(f"Uploading file: {file.filename}")
-    file_path = settings.UPLOAD_DIR / (file.filename or "uploaded_video.mp4")
+    filename = file.filename or "uploaded_video.mp4"
+    file_path = settings.UPLOAD_DIR / filename
+
+    # Generate public URL
+    base_url = str(req.base_url).rstrip("/")
+    download_url = f"{base_url}/outputs/{filename}"
 
     try:
         with file_path.open("wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
         logger.info(f"File saved successfully: {file_path}")
-        return {"filename": file.filename or "video.mp4", "path": str(file_path.absolute())}
+        return {
+            "filename": filename,
+            "path": str(file_path.absolute()),
+            "download_url": download_url
+        }
     except Exception as e:
         logger.error(f"Failed to save file: {e}")
         raise HTTPException(status_code=500, detail=f"File storage failed: {str(e)}") from e
@@ -121,7 +135,11 @@ async def burn_video(request: BurnRequest, req: Request) -> BurnResponse:
 
     try:
         segments_dict = [seg.model_dump() for seg in request.segments]
-        output_path = burn_subtitles(path_obj, segments_dict)
+        output_path = burn_subtitles(
+            video_path=path_obj,
+            segments=segments_dict,
+            template_id=request.template_id
+        )
 
         # Generate public URL
         filename = os.path.basename(output_path)
