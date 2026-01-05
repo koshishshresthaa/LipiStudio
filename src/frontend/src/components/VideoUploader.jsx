@@ -57,13 +57,11 @@ const VideoUploader = ({ onUploadComplete }) => {
                 },
             });
 
-            if (onUploadComplete) {
-                onUploadComplete({
-                    filename: file.name,
-                    path: response.data.path,
-                    url: URL.createObjectURL(file)
-                });
-            }
+            onUploadComplete({
+                filename: file.name,
+                path: response.data.path,
+                url: response.data.download_url
+            });
         } catch (err) {
             console.error(err);
             setError("Server error during upload. Is the backend running?");

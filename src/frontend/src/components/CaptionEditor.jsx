@@ -3,18 +3,25 @@ import ReactPlayer from 'react-player';
 import axios from 'axios';
 import {
     Play, Pause, Save, Type, Languages, ArrowRight, Loader2,
-    Download, RefreshCw, ChevronLeft, Film, Wand2, Check
+    Download, RefreshCw, ChevronLeft, Film, Wand2, Check,
+    Sparkles, Layout
 } from 'lucide-react';
 
-const CaptionEditor = ({ videoData, onBack }) => {
+const CaptionEditor = ({ videoData, previewUrl, setPreviewUrl, onBack }) => {
     const [segments, setSegments] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [playing, setPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [burnStatus, setBurnStatus] = useState(null);
     const [outputVideoPath, setOutputVideoPath] = useState(null);
-    const [previewUrl, setPreviewUrl] = useState(null);
     const [showBurned, setShowBurned] = useState(false);
+    const [selectedTemplate, setSelectedTemplate] = useState('modern_reel');
+
+    const TEMPLATES = [
+        { id: 'modern_reel', name: 'Modern', desc: 'Clean & Classic', icon: <Type className="w-4 h-4" /> },
+        { id: 'highlight', name: 'Highlight', desc: 'Bold & Yellow', icon: <Sparkles className="w-4 h-4" /> },
+        { id: 'minimalist', name: 'Minimal', desc: 'Subtle & Small', icon: <Layout className="w-4 h-4" /> },
+    ];
 
     const playerRef = useRef(null);
     const scrollRef = useRef(null);
@@ -69,7 +76,8 @@ const CaptionEditor = ({ videoData, onBack }) => {
         try {
             const payload = {
                 video_path: videoData.path,
-                segments: segments.map(({ start, end, text }) => ({ start, end, text }))
+                segments: segments.map(({ start, end, text }) => ({ start, end, text })),
+                template_id: selectedTemplate
             };
             const response = await axios.post('http://localhost:8000/burn', payload);
             setOutputVideoPath(response.data.output_path);
@@ -217,6 +225,32 @@ const CaptionEditor = ({ videoData, onBack }) => {
                             </button>
                         )}
                     </div>
+
+                    {/* Template Selector */}
+                    {segments.length > 0 && (
+                        <div className="p-4 bg-white/5 border-b border-white/5 grid grid-cols-3 gap-2">
+                            {TEMPLATES.map((t) => (
+                                <button
+                                    key={t.id}
+                                    onClick={() => setSelectedTemplate(t.id)}
+                                    className={`
+                                        flex flex-col items-center gap-1.5 p-3 rounded-xl border transition-all
+                                        ${selectedTemplate === t.id
+                                            ? 'bg-blue-600/20 border-blue-500 text-white shadow-lg shadow-blue-500/10'
+                                            : 'bg-white/5 border-white/5 text-slate-400 hover:text-white hover:bg-white/10'}
+                                    `}
+                                >
+                                    <div className={`${selectedTemplate === t.id ? 'text-blue-400' : 'opacity-50'}`}>
+                                        {t.icon}
+                                    </div>
+                                    <div className="text-center">
+                                        <p className="text-[10px] font-bold uppercase tracking-wider">{t.name}</p>
+                                        <p className="text-[8px] opacity-60 leading-tight">{t.desc}</p>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    )}
 
                     <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar" ref={scrollRef}>
                         {segments.length === 0 ? (

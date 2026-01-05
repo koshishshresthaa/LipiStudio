@@ -5,10 +5,12 @@ import { Sparkles, Github, Layout } from 'lucide-react';
 
 function App() {
   const [videoData, setVideoData] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
   const [view, setView] = useState('landing'); // 'landing' | 'studio'
 
   const handleUploadComplete = (data) => {
     setVideoData(data);
+    setPreviewUrl(data.url); // Use the backend URL as initial preview
     setView('studio');
   };
 
@@ -64,12 +66,14 @@ function App() {
       {/* Main View Switcher */}
       <main className="flex-1 pt-16">
         {view === 'landing' ? (
-          <LandingPage onUploadComplete={handleUploadComplete} />
+          <LandingPage onUploadComplete={handleUploadComplete} setPreviewUrl={setPreviewUrl} />
         ) : (
           <div className="p-6 h-[calc(100vh-64px)] overflow-hidden">
             <div className="max-w-[1800px] mx-auto h-full animate-in fade-in zoom-in-95 duration-500">
               <CaptionEditor
                 videoData={videoData}
+                previewUrl={previewUrl}
+                setPreviewUrl={setPreviewUrl}
                 onBack={handleBackToHome}
               />
             </div>
