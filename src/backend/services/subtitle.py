@@ -57,6 +57,7 @@ def generate_srt_content(segments: list[dict[str, Any]]) -> str:
 def burn_subtitles(
     video_path: str | Path,
     segments: list[dict[str, Any]],
+    template_id: str | None = None,
     output_path: str | Path | None = None
 ) -> str:
     """
@@ -94,15 +95,19 @@ def burn_subtitles(
             output_path = Path(output_path)
 
         # 3. Burn Subtitles
-        logger.info(f"Burning subtitles for {video_path.name}")
+        logger.info(f"Burning subtitles for {video_path.name} with template: {template_id}")
 
-        # Build ASS style string from settings
+        # Resolve Template
+        tid = template_id or settings.DEFAULT_TEMPLATE
+        template = settings.CAPTION_TEMPLATES.get(tid, settings.CAPTION_TEMPLATES[settings.DEFAULT_TEMPLATE])
+
+        # Build ASS style string from selected template
         style = (
-            f"Alignment=2,Fontsize={settings.SUBTITLE_FONT_SIZE},"
-            f"MarginV={settings.SUBTITLE_MARGIN_V},Bold={settings.SUBTITLE_BOLD},"
-            f"Outline={settings.SUBTITLE_OUTLINE},Shadow={settings.SUBTITLE_SHADOW},"
-            f"PrimaryColour={settings.SUBTITLE_COLOR},"
-            f"OutlineColour={settings.SUBTITLE_OUTLINE_COLOR},"
+            f"Alignment=2,Fontsize={template['font_size']},"
+            f"MarginV={template['margin_v']},Bold={template['bold']},"
+            f"Outline={template['outline']},Shadow={template['shadow']},"
+            f"PrimaryColour={template['primary_color']},"
+            f"OutlineColour={template['outline_color']},"
             f"WrapStyle={settings.SUBTITLE_WRAP_STYLE}"
         )
 
